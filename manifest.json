@@ -1,0 +1,22 @@
+  
+{
+    "manifest_version": 2,
+    "name": "Youtube Advertisement Skipper",
+    "description": "We Skip YouTube ads for you.",
+    "version": "1",
+    "permissions": ["tabs"],
+    "content_scripts": [
+        {
+            "matches": ["https://www.youtube.com/*"],           
+            "js": ["content-script.js"],
+            "run_at": "document_end"
+        }
+
+    ],
+    "icons": {
+        "128": "skip.png"
+        },
+	"background": {
+		"scripts": ["background.js"]
+	}
+}
