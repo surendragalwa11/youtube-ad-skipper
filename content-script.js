@@ -10,10 +10,21 @@ const playerTagName = 'ytd-player';
 // youtube URL
 const youtubeUrl = 'www.youtube.com';
 
+// interval
+let pollingInterval = null;
+
 // check if site is youtube
 function isYoutubeURL() {
     const currentUrl = window.location.hostname;
     return currentUrl == youtubeUrl;
+}
+
+
+// check if any video is playing
+function isVideoPlayerScreen() {
+    // video player screen
+    const player = document.getElementById(playerId);
+    return !!player;
 }
 
 function debounced(delay, fn) {
@@ -29,20 +40,18 @@ function debounced(delay, fn) {
     }
   }
 
-// check if any video is playing
-function isVideoPlayerScreen() {
-    // video player screen
-    const player = document.getElementById(playerId);
-    return !!player;
-}
-
 function skipAdvertisement() {
-    const skipButtons = document.getElementsByClassName(skipBtnClass);
-    // skip button exists
-   if (skipButtons.length > 0) {
-        // click on the button & skip ad
-        skipButtons[0].click();
-    }
+	if(!!pollingInterval) {
+		clearInterval(pollingInterval);
+	}
+	pollingInterval = setInterval(function() {
+		const skipButtons = document.getElementsByClassName(skipBtnClass);
+		// skip button exists
+		if (skipButtons.length > 0) {
+			// click on the button & skip ad
+			skipButtons[0].click();
+		}
+	}, 2000)  
 }
 
 const skipAdHandler = debounced(1000, skipAdvertisement)
@@ -63,16 +72,16 @@ function main() {
     const isPlayerScreen = isVideoPlayerScreen();
 
     if(isPlayerScreen) {
-        skipAdHandler();
+        skipAdvertisement();
     }
 }
 
 function messageListener(message) {
-    main();
+	main();
 }
 
 // on window load
-window.addEventListener('load', main);
+window.onload = main()
 
 // background message listener
-chrome.runtime.onMessage.addListener(messageListener);
+chrome.runtime.onMessage = messageListener(message);
