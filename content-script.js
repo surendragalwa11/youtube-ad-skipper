@@ -76,8 +76,8 @@ function skipAdvertisement() {
       // update counter
       closedBanner++
       // clear old counter logs and log new counter
-      console.clear( )
-      console.log('%cSkip Youtube Ads: We just closed banner number %d for you. Cheers.', 'color: green; font-size: 15px', skippedAds);
+      console.clear();
+      console.log('%cSkip Youtube Ads: We just closed banner number %d for you. Cheers.', 'color: green; font-size: 15px', closedBanner);
     }
 
 	}, 2000);
