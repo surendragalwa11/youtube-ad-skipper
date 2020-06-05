@@ -7,11 +7,18 @@ const playerId = 'player-theater-container';
 // player tag name
 const playerTagName = 'ytd-player';
 
+// ad banner close button classname
+const adBannerCloseBtnClass = 'ytp-ad-overlay-close-button';
+
 // youtube URL
 const youtubeUrl = 'www.youtube.com';
 
 // interval
-let pollingInterval = null;
+let pollingIntervalInstance = null;
+
+// Counter
+let skippedAds = 0;
+let closedBanner = 0;
 
 // check if site is youtube
 function isYoutubeURL() {
@@ -41,17 +48,39 @@ function debounced(delay, fn) {
   }
 
 function skipAdvertisement() {
-	if(!!pollingInterval) {
-		clearInterval(pollingInterval);
-	}
-	pollingInterval = setInterval(function() {
-		const skipButtons = document.getElementsByClassName(skipBtnClass);
-		// skip button exists
+
+	if(!!pollingIntervalInstance) {
+		clearInterval(pollingIntervalInstance);
+  }
+
+	pollingIntervalInstance = setInterval(function() {
+
+    const skipButtons = document.getElementsByClassName(skipBtnClass);
+		// ad skip button exists
 		if (skipButtons.length > 0) {
 			// click on the button & skip ad
-			skipButtons[0].click();
-		}
-	}, 2000)  
+      skipButtons[0].click();
+      // update counter
+      skippedAds++;
+      // clear old counter logs and log new counter
+      console.clear();
+      console.log('%cSkip Youtube Ads: We just skipped ad number %d for you. Cheers.', 'color: green; font-size: 15px', skippedAds);
+    }
+
+    // ad banner exists (overlay banner on video)
+    const adBannerCloseBtn = document.getElementsByClassName(adBannerCloseBtnClass);
+    // if ad banner exist with close btn
+    if(adBannerCloseBtn.length > 0) {
+      // click and close the banner
+      adBannerCloseBtn[0].click();
+      // update counter
+      closedBanner++
+      // clear old counter logs and log new counter
+      console.clear( )
+      console.log('%cSkip Youtube Ads: We just closed banner number %d for you. Cheers.', 'color: green; font-size: 15px', skippedAds);
+    }
+
+	}, 2000);
 }
 
 const skipAdHandler = debounced(1000, skipAdvertisement)
